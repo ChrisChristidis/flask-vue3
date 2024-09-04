@@ -1,0 +1,44 @@
+version: '3'
+
+services:
+  backend:
+    build:
+      context: ./backend
+      dockerfile: Dockerfile
+    container_name: games_backend
+    ports:
+      - "5000:5000"
+    volumes:
+      - ./backend:/app
+    environment:
+      # Replace the DB URL with your MongoDB Atlas URL
+      MONGODB_URL: "<mongodb_url>"
+    depends_on:
+      - frontend
+
+  frontend:
+    build:
+      context: ./frontend
+      dockerfile: Dockerfile
+    container_name: games_frontend
+    ports:
+      - "8080:8080"
+    volumes:
+      - ./frontend:/app
+
+  # Optional: MongoDB service if you want to run MongoDB locally
+  mongodb:
+    image: mongo:6.0
+    container_name: games_mongodb
+    ports:
+      - "27017:27017"
+    environment:
+      MONGO_INITDB_ROOT_USERNAME: "<username>"
+      MONGO_INITDB_ROOT_PASSWORD: "<password>"
+    volumes:
+      - mongodb_data:/data/db
+
+# Volumes for MongoDB data
+volumes:
+  mongodb_data:
+    driver: local
