@@ -1,5 +1,5 @@
 version: "3"
-
+ 
 services:
   backend:
     build:
@@ -12,7 +12,7 @@ services:
       - ./backend:/app
     depends_on:
       - frontend
-
+ 
   frontend:
     build:
       context: ./frontend
@@ -22,3 +22,4 @@ services:
       - "8080:8080"
     volumes:
       - ./frontend:/app
+      - /app/node_modules

@@ -25,6 +25,7 @@ services:
       - "8080:8080"
     volumes:
       - ./frontend:/app
+      - /app/node_modules
 
   # Optional: MongoDB service if you want to run MongoDB locally
   mongodb:

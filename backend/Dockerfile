@@ -17,5 +17,5 @@ COPY . .
 EXPOSE 5000
 
 # Run the application
-# CMD ["python", "main.py"]
-CMD ["python", "mainWithDB.py"]
+# CMD ["python", "mainWithDB.py"]
+CMD ["python", "main.py"]
