@@ -1,23 +1,23 @@
-# Use the official Node.js image
-FROM node:18
+# Build Stage
+FROM node:18 AS builder
 
-# Set the working directory in the container
 WORKDIR /app
-
-# Copy the package.json and package-lock.json (if available)
 COPY package*.json ./
-
-# Install dependencies
 RUN npm install
-
-# Copy the rest of the application code into the container
 COPY . .
 
-# Build the Vue 3 app
+# Baked into the bundle at build time. Defaults to localhost for dev builds.
+ARG VUE_APP_API_URL=http://localhost:5050
+ENV VUE_APP_API_URL=$VUE_APP_API_URL
+
 RUN npm run build
 
-# Expose port 8080 for the frontend application
-EXPOSE 8080
-
-# Serve the app with `npm run serve`
-CMD ["npm", "run", "serve"]
+# Serve with NGINX. The nginx:alpine image auto-runs envsubst on any
+# /etc/nginx/templates/*.template file, substituting $PORT (and any other
+# env vars) before nginx starts. Set PORT to whatever your host expects
+# (80 locally, $PORT on Render, etc).
+FROM nginx:alpine
+COPY --from=builder /app/dist /usr/share/nginx/html
+COPY nginx.conf.template /etc/nginx/templates/default.conf.template
+ENV PORT=80
+CMD ["nginx", "-g", "daemon off;"]

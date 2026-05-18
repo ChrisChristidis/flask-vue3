@@ -1,12 +1,18 @@
 from flask import Flask, jsonify, request
 from flask_cors import CORS
+import os
 import uuid
 
 app = Flask(__name__)
 
 app.config.from_object(__name__)
 
-CORS(app, resources={r"/*": {"origins": "*"}})
+# Comma-separated list of allowed origins. Defaults to "*" for local/dev so
+# Docker-compose works out of the box. Set CORS_ORIGINS to your real frontend
+# URL in production (e.g. https://flask-vue3-frontend.onrender.com).
+_origins_raw = os.getenv("CORS_ORIGINS", "*")
+_origins = [o.strip() for o in _origins_raw.split(",")] if _origins_raw != "*" else "*"
+CORS(app, resources={r"/*": {"origins": _origins}})
 
 GAMES = [
     {"id": uuid.uuid4().hex, "title": "2k24", "genre": "sports", "played": True},
@@ -90,4 +96,5 @@ def remove_game(game_id):
 
 
 if __name__ == "__main__":
-    app.run(host="0.0.0.0", debug=True)
+    port = int(os.getenv("PORT", 5000))
+    app.run(host="0.0.0.0", port=port, debug=False)

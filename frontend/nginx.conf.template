@@ -1,0 +1,19 @@
+server {
+    listen       ${PORT};
+    server_name  _;
+
+    root   /usr/share/nginx/html;
+    index  index.html;
+
+    # SPA fallback — Vue Router history mode serves index.html for any path.
+    location / {
+        try_files $uri $uri/ /index.html;
+    }
+
+    # Cache hashed assets aggressively.
+    location ~* \.(?:js|css|png|jpg|jpeg|gif|ico|svg|woff2?)$ {
+        expires 30d;
+        access_log off;
+        add_header Cache-Control "public";
+    }
+}

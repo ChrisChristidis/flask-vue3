@@ -1,13 +1,12 @@
-version: "3"
- 
 services:
   backend:
     build:
       context: ./backend
       dockerfile: Dockerfile
+    platform: linux/amd64
     container_name: backend
     ports:
-      - "5000:5000"
+      - "5050:5000"
     volumes:
       - ./backend:/app
     depends_on:
@@ -17,9 +16,13 @@ services:
     build:
       context: ./frontend
       dockerfile: Dockerfile
+      args:
+        # Override per environment; defaults to http://localhost:5050 in the Dockerfile.
+        VUE_APP_API_URL: "${VUE_APP_API_URL:-http://localhost:5050}"
+    platform: linux/amd64
     container_name: frontend
     ports:
-      - "8080:8080"
-    volumes:
-      - ./frontend:/app
-      - /app/node_modules
+      - "8080:80"
+    # volumes:
+    #   - ./frontend:/app
+    #   - /app/node_modules

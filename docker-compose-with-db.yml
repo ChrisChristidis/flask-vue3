@@ -1,5 +1,3 @@
-version: '3'
-
 services:
   backend:
     build:
@@ -11,8 +9,10 @@ services:
     volumes:
       - ./backend:/app
     environment:
-      # Replace the DB URL with your MongoDB Atlas URL
-      MONGODB_URL: "<mongodb_url>"
+      # Set MONGODB_URL in a local .env file (gitignored), e.g.:
+      #   MONGODB_URL=mongodb+srv://<user>:<pass>@<cluster>.mongodb.net/
+      # or point at the local mongodb service: mongodb://<user>:<pass>@mongodb:27017/
+      MONGODB_URL: "${MONGODB_URL}"
     depends_on:
       - frontend
 
@@ -34,8 +34,8 @@ services:
     ports:
       - "27017:27017"
     environment:
-      MONGO_INITDB_ROOT_USERNAME: "<username>"
-      MONGO_INITDB_ROOT_PASSWORD: "<password>"
+      MONGO_INITDB_ROOT_USERNAME: "${MONGO_INITDB_ROOT_USERNAME}"
+      MONGO_INITDB_ROOT_PASSWORD: "${MONGO_INITDB_ROOT_PASSWORD}"
     volumes:
       - mongodb_data:/data/db
 

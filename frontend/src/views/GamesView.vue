@@ -204,6 +204,8 @@
 import axios from "axios";
 import { ref, onMounted } from "vue";
 
+const API_BASE = process.env.VUE_APP_API_URL || "http://localhost:5050";
+
 const games = ref([]);
 const addGameForm = ref({
   title: "",
@@ -225,7 +227,7 @@ const showMessage = ref(false);
 
 // GET function
 const getGames = () => {
-  const path = "http://localhost:5000/games";
+  const path = `${API_BASE}/games`;
 
   axios
     .get(path)
@@ -235,7 +237,7 @@ const getGames = () => {
 
 // POST function
 const addGame = (payload) => {
-  const path = "http://localhost:5000/games";
+  const path = `${API_BASE}/games`;
 
   axios
     .post(path, payload)
@@ -255,7 +257,7 @@ const addGame = (payload) => {
 
 // PUT function
 const updateGame = (payload, gameID) => {
-  const path = `http://localhost:5000/games/${gameID}`;
+  const path = `${API_BASE}/games/${gameID}`;
 
   axios
     .put(path, payload)
@@ -274,7 +276,7 @@ const updateGame = (payload, gameID) => {
 };
 
 const deleteGame = (gameID) => {
-  const path = `http://localhost:5000/games/${gameID}`;
+  const path = `${API_BASE}/games/${gameID}`;
 
   axios
     .delete(path)

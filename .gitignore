@@ -1,0 +1,32 @@
+# Local environment / secrets
+.env
+.env.*
+!.env.example
+
+# Per-session working notes
+HANDOFF.md
+
+# OS
+.DS_Store
+Thumbs.db
+
+# Editor
+.vscode/
+.idea/
+
+# Python
+__pycache__/
+*.py[cod]
+*.egg-info/
+.venv/
+venv/
+
+# Node
+node_modules/
+npm-debug.log*
+yarn-debug.log*
+yarn-error.log*
+
+# Build artifacts
+frontend/dist/
+backend/instance/

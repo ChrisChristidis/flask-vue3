@@ -19,7 +19,9 @@ games_collection = db.games
 
 app.config.from_object(__name__)
 
-CORS(app, resources={r"/*": {"origins": "*"}})
+_origins_raw = os.getenv("CORS_ORIGINS", "*")
+_origins = [o.strip() for o in _origins_raw.split(",")] if _origins_raw != "*" else "*"
+CORS(app, resources={r"/*": {"origins": _origins}})
 
 
 # GET and POST route handler
@@ -87,4 +89,5 @@ def remove_game(game_id):
 
 
 if __name__ == "__main__":
-    app.run(host="0.0.0.0", debug=True)
+    port = int(os.getenv("PORT", 5000))
+    app.run(host="0.0.0.0", port=port, debug=False)

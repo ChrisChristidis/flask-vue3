@@ -1,0 +1,36 @@
+# Render Blueprint — one-click deploy of both services.
+#
+# How to use:
+#   1. Push this repo to GitHub.
+#   2. Render dashboard → Blueprints → New Blueprint Instance → pick the repo.
+#   3. Render reads this file and creates both services.
+#
+# Service URLs are <name>.onrender.com, which is why the env vars below
+# reference each other by predicted URL. If you rename either service,
+# update both URLs below.
+
+services:
+  - type: web
+    name: flask-vue3-backend
+    runtime: docker
+    plan: free
+    region: frankfurt
+    rootDir: backend
+    dockerfilePath: ./Dockerfile
+    healthCheckPath: /games
+    envVars:
+      - key: CORS_ORIGINS
+        value: https://flask-vue3-frontend.onrender.com
+
+  - type: web
+    name: flask-vue3-frontend
+    runtime: docker
+    plan: free
+    region: frankfurt
+    rootDir: frontend
+    dockerfilePath: ./Dockerfile
+    envVars:
+      # Baked into the JS bundle at build time via the Dockerfile's
+      # `ARG VUE_APP_API_URL`. Render exposes envVars to the docker build.
+      - key: VUE_APP_API_URL
+        value: https://flask-vue3-backend.onrender.com
