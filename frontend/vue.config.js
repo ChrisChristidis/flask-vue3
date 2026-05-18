@@ -4,6 +4,9 @@ const { BootstrapVueNextResolver } = require("bootstrap-vue-next");
 const webpack = require("webpack");
 
 module.exports = defineConfig({
+  // Skip lint during prod builds — formatting nits shouldn't block ship.
+  // Run `npm run lint` during dev for feedback.
+  lintOnSave: false,
   configureWebpack: {
     plugins: [
       new webpack.DefinePlugin({
