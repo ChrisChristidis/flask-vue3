@@ -5,5 +5,7 @@ import router from "./router";
 import { createBootstrap } from "bootstrap-vue-next";
 import "bootstrap/dist/css/bootstrap.css";
 import "bootstrap-vue-next/dist/bootstrap-vue-next.css";
+// Global retro overrides — must load AFTER bootstrap to win specificity wars
+import "./assets/retro.css";
 
 createApp(App).use(router).use(createBootstrap()).mount("#app");

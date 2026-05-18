@@ -76,59 +76,74 @@ docker compose down -v         # also drop named volumes (e.g. mongodb_data)
 
 ## The retro UI
 
-The look is deliberately layered on top of Bootswatch Sketchy (whose
-hand-drawn black borders give the "arcade cabinet" chassis). The retro lift
-comes from a small set of overrides in [GamesView.vue](frontend/src/views/GamesView.vue):
+The look is layered on top of Bootswatch Sketchy (whose hand-drawn black
+borders give the "arcade cabinet" chassis). The retro lift comes from styles
+split across two files:
 
+- **`frontend/src/views/GamesView.vue`** — scoped styles for everything inside
+  the component (hero, stats, cabinet table, badges, footer, help overlay)
+- **`frontend/src/assets/retro.css`** — *global* overrides loaded from `main.js`.
+  Needed because Bootstrap-Vue-Next modals render via Vue's Teleport (outside
+  the component DOM), so scoped styles can't reach them; same trick is used to
+  override Bootswatch's `.table` row backgrounds.
+
+### Visual ingredients
 - **Press Start 2P** — the iconic 8-bit arcade font, used for titles, badges,
   buttons, footer.
 - **VT323** — CRT-monitor font, used for body copy and game titles.
 - **Neon palette** — pink `#ff2d95`, cyan `#00e0ff`, yellow `#ffe945`,
   green `#39ff7d`, purple `#a259ff` on cabinet-dark `#0c0c1a`.
 - **CRT scanlines + vignette** on the hero (pure CSS).
-- **Blinking marquee, blinking cursor, blinking footer dots** — `@keyframes blink`.
-- **Hard "Sketchy" drop shadows** (no blur, offset 4–6 px) on stats and cabinet.
+- **Blinking marquee, blinking cursor, blinking footer dots**.
+- **Hard "Sketchy" drop shadows** (no blur, offset 4–6 px) on stats + cabinet.
+- **Genre badges** are auto-colored from a 6-color neon palette via a hash of
+  the genre name — same genre always gets the same color.
+
+### Features inside the cabinet
+- **Search** — live filter by title or genre. Focus with `/`, clear with `Esc`.
+- **Sort** — click any column header to sort ascending/descending (▲/▼ glyph).
+- **Cover art** — optional `cover_url` field per game; thumbnails render with
+  `image-rendering: pixelated` for the retro look.
+- **8-bit sounds** — synthesized in real time via Web Audio (no audio files
+  bundled). 6 sounds: coin (on first click), blip (sort), success (cleared),
+  zap (delete), powerup (add), konami (easter egg). Mute toggle in the hero
+  corner; preference persists in `localStorage`.
+- **Keyboard shortcuts** — `A` add, `/` search, `Esc` close/clear, `M` mute,
+  `?` help overlay.
+- **Konami code** — `↑↑↓↓←→←→BA` inverts the palette for 10 seconds.
 
 Both Google Fonts and the Bootswatch CDN are loaded from `public/index.html`
 with `preconnect` for faster paint.
 
 To change the palette, edit the `/* ===== RETRO ARCADE PALETTE =====` block at
-the top of the `<style>` in `GamesView.vue`.
+the top of `GamesView.vue`'s `<style>`.
 
 ---
 
-## Mode B — with MongoDB
+## Persistence (optional MongoDB mode)
 
-Use this when you want games to persist across restarts.
+The backend auto-switches at startup based on the `MONGODB_URL` env var. No
+file swap, no Dockerfile change — just set the env var and persistence kicks
+in. With it unset, the in-memory list seeds 5 sample games (resets on every
+backend restart).
 
-1. **Switch the compose file:**
-   ```bash
-   cp docker-compose-with-db.yml docker-compose.yml
-   ```
+### Local — with Mongo container
+```bash
+cp docker-compose-with-db.yml docker-compose.yml
+cp .env.example .env   # then fill in MONGODB_URL + credentials
+docker compose up --build
+```
 
-2. **Switch the backend entrypoint.** In `backend/Dockerfile`, change:
-   ```dockerfile
-   # CMD ["python", "main.py"]
-   CMD ["python", "mainWithDB.py"]
-   ```
-
-3. **Create `.env`** at the repo root (gitignored — see `.env.example`):
-   ```env
-   MONGODB_URL=mongodb://user:pass@mongodb:27017/
-   MONGO_INITDB_ROOT_USERNAME=user
-   MONGO_INITDB_ROOT_PASSWORD=<choose-a-strong-one>
-   ```
-   For MongoDB Atlas, use `mongodb+srv://<user>:<pass>@<cluster>.mongodb.net/`
-   in `MONGODB_URL` and drop the `mongodb` service from compose.
-
-4. **Rebuild & up:**
-   ```bash
-   docker compose up --build
-   ```
+### Render — Atlas free cluster
+1. Create a free [MongoDB Atlas](https://www.mongodb.com/cloud/atlas/register) cluster (M0 tier, $0).
+2. Database Access → add a DB user. Network Access → allow `0.0.0.0/0`.
+3. Copy the connection string (looks like `mongodb+srv://…@…mongodb.net/`).
+4. Render dashboard → `flask-vue3-backend` → Environment → `MONGODB_URL` → paste it → Save.
+5. Render redeploys automatically; storage flips from `memory` to `mongo` (verify at `/health`).
 
 ---
 
-## Mode C — dev mode (hot reload, no Docker)
+## Dev mode (hot reload, no Docker)
 
 ### Backend
 ```bash
@@ -169,9 +184,10 @@ VUE_APP_API_URL=http://localhost:5000 npm run serve
 | Method | Path | Body | Response |
 |---|---|---|---|
 | GET | `/games` | — | `{ status, games: [...] }` |
-| POST | `/games` | `{ title, genre, played }` | `{ status, message }` |
-| PUT | `/games/<id>` | `{ title, genre, played }` | `{ status, message, games }` |
+| POST | `/games` | `{ title, genre, played, cover_url? }` | `{ status, message }` |
+| PUT | `/games/<id>` | `{ title, genre, played, cover_url? }` | `{ status, message, games }` |
 | DELETE | `/games/<id>` | — | `{ status, message, games }` |
+| GET | `/health` | — | `{ status, storage: "memory" \| "mongo" }` |
 
 ---
 

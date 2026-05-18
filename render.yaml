@@ -21,6 +21,11 @@ services:
     envVars:
       - key: CORS_ORIGINS
         value: https://flask-vue3-frontend.onrender.com
+      # Optional. If set, the backend persists to MongoDB; otherwise uses
+      # in-memory storage. To enable: fill in the value via Render's dashboard
+      # (Settings → Environment) — `sync: false` keeps the secret out of the repo.
+      - key: MONGODB_URL
+        sync: false
 
   - type: web
     name: flask-vue3-frontend

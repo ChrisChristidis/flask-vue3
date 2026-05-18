@@ -1,0 +1,203 @@
+/* ============================================
+   GLOBAL RETRO OVERRIDES
+   Loaded from main.js — these escape Vue's
+   scoped style boundaries so they reach
+   Bootstrap-Vue-Next's Teleported modals.
+   ============================================ */
+
+/* ---------- Modal chassis ---------- */
+.modal-content {
+  background: #0c0c1a !important;
+  border: 3px solid #000 !important;
+  border-radius: 12px !important;
+  color: #cdd5e0 !important;
+  box-shadow: 6px 6px 0 #000 !important;
+}
+
+.modal-header {
+  background: #14142a !important;
+  border-bottom: 2px solid #00e0ff !important;
+  padding: 1rem 1.25rem !important;
+}
+
+.modal-title {
+  font-family: "Press Start 2P", monospace !important;
+  font-size: 0.85rem !important;
+  color: #ffe945 !important;
+  letter-spacing: 0.08em !important;
+  text-transform: uppercase;
+  text-shadow: 2px 2px 0 #ff2d95;
+}
+
+.modal-header .btn-close,
+.modal-header .close {
+  color: #00e0ff !important;
+  opacity: 1 !important;
+  filter: invert(78%) sepia(82%) saturate(2890%) hue-rotate(155deg)
+    brightness(102%);
+  text-shadow: none !important;
+}
+
+.modal-body {
+  padding: 1.5rem !important;
+  background: #0c0c1a !important;
+}
+
+.modal-footer {
+  background: #0c0c1a !important;
+  border-top: 1px solid rgba(0, 224, 255, 0.2) !important;
+}
+
+/* Modal labels */
+.modal-content label,
+.modal-content .form-label {
+  font-family: "Press Start 2P", monospace !important;
+  font-size: 0.55rem !important;
+  color: #00e0ff !important;
+  letter-spacing: 0.1em !important;
+  text-transform: uppercase;
+  margin-bottom: 0.5rem !important;
+}
+
+/* Modal inputs */
+.modal-content .form-control,
+.modal-content input[type="text"],
+.modal-content input[type="url"] {
+  background: #14142a !important;
+  border: 2px solid #00e0ff !important;
+  border-radius: 6px !important;
+  color: #fff !important;
+  font-family: "VT323", monospace !important;
+  font-size: 1.25rem !important;
+  padding: 0.5rem 0.75rem !important;
+  box-shadow: none !important;
+}
+
+.modal-content .form-control:focus,
+.modal-content input:focus {
+  border-color: #ff2d95 !important;
+  background: #1a1a3e !important;
+  box-shadow: 0 0 8px rgba(255, 45, 149, 0.5) !important;
+  outline: none !important;
+}
+
+.modal-content .form-control::placeholder {
+  color: #6c6a7a !important;
+}
+
+/* Floating label support */
+.modal-content .form-floating > label {
+  color: #00e0ff !important;
+  font-family: "Press Start 2P", monospace !important;
+  font-size: 0.55rem !important;
+  padding: 0.75rem !important;
+}
+
+/* Modal checkbox */
+.modal-content input[type="checkbox"] {
+  accent-color: #ff2d95;
+  width: 18px;
+  height: 18px;
+  cursor: pointer;
+}
+
+/* Modal buttons */
+.modal-content .btn {
+  font-family: "Press Start 2P", monospace !important;
+  font-size: 0.6rem !important;
+  letter-spacing: 0.05em !important;
+  padding: 0.6rem 1rem !important;
+  border-width: 2px !important;
+}
+
+.modal-content .btn-primary {
+  background: #ff2d95 !important;
+  border-color: #000 !important;
+  color: #fff !important;
+  box-shadow: 3px 3px 0 #000 !important;
+}
+
+.modal-content .btn-primary:hover {
+  background: #ff5cab !important;
+  transform: translate(-1px, -1px);
+  box-shadow: 4px 4px 0 #000 !important;
+}
+
+.modal-content .btn-outline-secondary {
+  background: #14142a !important;
+  border-color: #00e0ff !important;
+  color: #00e0ff !important;
+}
+
+.modal-content .btn-outline-secondary:hover {
+  background: #00e0ff !important;
+  color: #000 !important;
+}
+
+/* Modal backdrop tint */
+.modal-backdrop {
+  background-color: #000 !important;
+}
+.modal-backdrop.show {
+  opacity: 0.75 !important;
+}
+
+/* ---------- Table row readability ---------- */
+/* Bootswatch Sketchy sets light backgrounds on .table rows; force dark. */
+.cabinet .table tbody tr,
+.cabinet .table tbody tr td {
+  background: transparent !important;
+  color: #cdd5e0 !important;
+}
+
+.cabinet .table.table-hover tbody tr:hover,
+.cabinet .table.table-hover tbody tr:hover td {
+  background: rgba(255, 45, 149, 0.08) !important;
+}
+
+/* Force the title-cell text white explicitly */
+.cabinet .table tbody td strong {
+  color: #fff !important;
+}
+
+/* Make sure Bootstrap's .table won't inject striped or thead light bg */
+.cabinet .table > :not(caption) > * > * {
+  background-color: transparent !important;
+}
+
+/* ---------- Alert (toast) restyle ---------- */
+.alert.alert-success {
+  background: #14142a !important;
+  border: 2px solid #39ff7d !important;
+  color: #39ff7d !important;
+  font-family: "VT323", monospace !important;
+  font-size: 1.15rem !important;
+  border-radius: 6px !important;
+  box-shadow: 0 0 12px rgba(57, 255, 125, 0.3) !important;
+}
+
+.alert.alert-success .btn-close {
+  filter: invert(85%) sepia(33%) saturate(826%) hue-rotate(70deg)
+    brightness(105%);
+}
+
+/* ---------- Konami easter-egg palette flip ---------- */
+.konami-mode {
+  animation: konami-flash 0.4s steps(2, end) 3;
+}
+.konami-mode .hero,
+.konami-mode .cabinet,
+.konami-mode .stat-card {
+  filter: hue-rotate(180deg) saturate(1.5);
+  transition: filter 0.3s;
+}
+
+@keyframes konami-flash {
+  0%,
+  100% {
+    filter: none;
+  }
+  50% {
+    filter: invert(1) hue-rotate(180deg);
+  }
+}
